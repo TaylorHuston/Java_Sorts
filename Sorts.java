@@ -70,9 +70,26 @@ public class Sorts {
             StdOut.println("Running time: " + t3.elapsedTime());
         }
         StdOut.println();
+        
+
+        Integer[] mergeArray = new Integer[length];  
+        arrayCopy(masterArray, mergeArray);
+        Stopwatch t4 = new Stopwatch();
+
+        mergeSort(mergeArray);
+
+        StdOut.println("After Merge Sort"); 
+        for(int i=0; i < length; i++) {
+           StdOut.print(mergeArray[i] + " ");
+        }
+        if (isSorted(mergeArray)){
+            StdOut.println("Running time: " + t4.elapsedTime());
+        }
+        StdOut.println();
     }
     
     
+    //Simple function to duplicate an array
     public static void arrayCopy(int[] a, Integer[] b) {
         for(int i = 0; i < a.length; i++) {
            b[i] = a[i];
@@ -132,7 +149,7 @@ public class Sorts {
         int N = toSort.length;
         int h = 1;
         
-        while (h < N/3) {
+        while (h < N/3) {  //Computers the size of the h-arrays
             h = h*3 + 1;  //1,4,13,40,121.....
         }
         
@@ -142,9 +159,64 @@ public class Sorts {
                     swap(toSort, j, j-h);
                 }
             }
-        h = h/3;
+        h = h/3;  //Shrinks to the next h-array size
         } 
     }
+    
+    
+    /*Sorts passed array of any Comparable object by ascending order.
+    Uses the Merge Sort method.  Recursively breaks the array into 1/2 sized sub arrays,
+    then merges them in sorted order as the stack unwinds*/
+    private static Comparable[] tempArray;  //Data placeholder
+    
+    public static void mergeSort(Comparable[] toSort) {
+        tempArray = new Comparable[toSort.length];
+        mergeSort(toSort, 0, toSort.length-1);
+    }
+    
+    public static void mergeSort(Comparable[] toSort, int low, int high) {
+        if(high <= low){  //When you get to a one entry array
+            return;
+        }
+        
+        int mid = low + (high - low)/2;  //Create the mid point
+        
+        mergeSort(toSort, low, mid);  //Sort left half
+        mergeSort(toSort, mid+1, high); //Sort right half
+        
+        if(greater(toSort[mid],toSort[mid+1])) {  //Skips the merge if everything in the left is smaller then everything in the right
+            mergeArrays(toSort, low, mid, high);  //Merge results
+        }
+    }
+    
+    public static void mergeArrays(Comparable[] toSort, int low, int mid, int high){
+        int i = low;
+        int j = mid+1;
+        
+        for (int k = low; k <= high; k++) {  //Copy values into temporary array
+            tempArray[k] = toSort[k];
+        }
+        
+        for (int k = low; k <= high; k++) {
+            if (i > mid) {  //If you've ran out of left items
+                toSort[k] = tempArray[j];
+                j++;
+            } 
+            else if (j > high) { //If you're out of right items
+                toSort[k] = tempArray[i];
+                i++;
+            }
+            else if (less(tempArray[j], tempArray[i])) {  //If the item on the right is smaller
+                toSort[k] = tempArray[j];
+                j++;
+            }
+            else {  //If the item on the left is smaller
+                toSort[k] = tempArray[i];
+                i++;
+            }
+        }
+    }
+    
     
     
     /********************
@@ -157,6 +229,10 @@ public class Sorts {
     
     private static boolean equals(Comparable x, Comparable y) {
         return x.compareTo(y) == 0;
+    }
+    
+    private static boolean greater(Comparable x, Comparable y) {
+        return x.compareTo(y) > 0;
     }
 
     private static void swap(Comparable[] items, int x, int y){
