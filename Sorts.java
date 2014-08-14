@@ -1,22 +1,20 @@
-/**
- * Sandbox for the various search algorithms presented in section 2 of
- * <a href="http://algs4.cs.princeton.edu/home/">Algorithms, 4th Edition - Robert Sedgewick | Kevine Wayne</a>
+/*
+  Sandbox for the various search algorithms from Section 2 of
+  <a href="http://algs4.cs.princeton.edu/home/">Algorithms, 4th Edition - Robert Sedgewick | Kevine Wayne</a>
  */
 
 import java.util.Arrays;
 
 public class Sorts {
-    private final int cutoff = 15;  //Cutoff for when it swaps to Insertion Sort
+
     
     /********************
     Sorting Algorithms
     ********************/
     
-    /*Sorts passed array of any Comparable object by ascending order.
-    Uses the Selection Sort method. For each iteration i we place the ith smallest
-    item in array[i]
+    /*Selection Sort
     
-    Has approximately ~(N^2)/2 compares and N exchanges regardless of size of N */
+    Sorts a passed array of any Comparable object by ascending order.Uses the Selection Sort method. For each iteration i we place the ith smallest item in array[i]*/
     public static void selectionSort(Comparable[] toSort) {
         
         int N = toSort.length;
@@ -33,15 +31,11 @@ public class Sorts {
         } 
     }
     
-    /*Sorts passed array of any Comparable object by ascending order.
-    Uses the Insertion Sort method.  For each iterarion i swap array[i] with entries
-    array[i-1  through 0] that are larger
+    /*Insertion Sort
     
-    Has between ~(N^2)/2 compares and exchanges (worst case) to N-1 compares and 0
-    exchanges (best case).  Average is approximately ~(N^2)/4 compares and exchanges */
+    Sorts a passed array of any Comparable object by ascending order. Uses the Insertion Sort method.  For each iterarion, i, swap array[i] with entries array[<i] that are larger.*/
     public static void insertionSort(Comparable[] toSort, int start, int end) {
-        //int N = toSort.length;
-        
+     
         for (int i=start; i <= end; i++) {
             for(int j = i; j > start && less(toSort[j], toSort[j-1]); j--) {
                 swap(toSort, j, j-1);
@@ -49,16 +43,14 @@ public class Sorts {
         } 
     }
     
-    /*Sorts passed array of any Comparable object by ascending order.
-    Uses the Shell Sort method, which is essentially a modified Insertion Short.
-    Rather then decrementing by 1, we decrement by decreasing values of h, breaking
-    the array into smaller and smaller already sorted sub-arrays. Increased performance
-    on larger arrays, especially when there are very small values at the end of the array*/
+    /*Shell Sort
+    
+    Sorts a passed array of any Comparable object by ascending order. Uses the Shell Sort method, which is essentially a modified Insertion Short. Rather then decrementing by 1, we decrement by decreasing values of h, breaking the array into smaller and smaller already sorted sub-arrays. Increased performance on larger arrays, especially when there are very small values at the end of the array*/
     public static void shellSort(Comparable[] toSort) {
         int N = toSort.length;
         int h = 1;
         
-        while (h < N/3) {  //Computers the size of the h-arrays
+        while (h < N/3) {  //Computes the max h-size array
             h = h*3 + 1;  //1,4,13,40,121.....
         }
         
@@ -73,12 +65,9 @@ public class Sorts {
     }
     
     
-    /*Sorts passed array of any Comparable object by ascending order.
-    Uses the Merge Sort method.  Recursively breaks the array into 1/2 sized sub arrays,
-    then merges them in sorted order as the stack unwinds.
+    /*Merge Sort
     
-    Uses between 1/2NlgN and NlgN compares. Uses at most 6NlgN total array accesses.
-    Since the number of compares is !NlgN it is an asymptotically optimale compare-based sorting algorithm
+    Sorts a passed array of any Comparable object by ascending order.  Uses the Merge Sort method.  Recursively breaks the array into 1/2 sized sub arrays, then merges them in sorted order as the stack unwinds.
     
     Uses Insertion sort when it gets to a certain threshold for small arrays*/ 
     public static void mergeSort(Comparable[] toSort) {
@@ -87,10 +76,8 @@ public class Sorts {
     }
     
     public static void mergeSort(Comparable[] toSort, Comparable[] tempArray, int low, int high) {  //Recursively splits the array in half and then merges in proper order
-//        if(high <= low){  //When you get to a single entry array
-//            return;
-//        }
         
+         //Cutoff to just Insertion Sort for smaller arrays
         if (high<=low + 15) {
            insertionSort(toSort, low, high);
            return;
@@ -107,6 +94,7 @@ public class Sorts {
        
     }
     
+    //Merges two sorted sub arrays into one larger sorted array
     public static void mergeArrays(Comparable[] toSort, Comparable[] tempArray, int low, int mid, int high){
         int i = low;
         int j = mid+1;
@@ -116,10 +104,10 @@ public class Sorts {
         }
         
         for (int k = low; k <= high; k++) {  //Copy values back in sorted order
-            if (i > mid) {  //If you've ran out of left items
+            if (i > mid) {  //No more left items
                 toSort[k] = tempArray[j++];
             } 
-            else if (j > high) { //If you're out of right items
+            else if (j > high) { //No more right items
                 toSort[k] = tempArray[i++];
             }
             else if (less(tempArray[j], tempArray[i])) {  //If the item on the right is smaller
@@ -132,20 +120,23 @@ public class Sorts {
     }
     
     
-    /*Sorts passed array of any Comparable object by ascending order.
-    Uses the Quick Sort method.  Recursively places an element in index array[v], known as the partition
-    into it's proper place so that every element array[<v] is < array[v] and every element array[>v] is > array[v]
+    /*Quick Sort
     
-    Uses ~2NlnN (approx 1.39NlgN) compares on average.  Worst case is higher, but random shuffling makes that
-    a stastical impossibility.  It makes roughly 1/6th as many excahges, making it usually faster then merge sort*/
+    Sorts passed array of any Comparable object by ascending order. Uses the Quick Sort method. Recursively places an element in index array[v], known as the partition into it's proper place so that every element array[<v] is < array[v] and every element array[>v] is > array[v]*/
     public static void quickSort(Comparable[] toSort)  {
         //StdRandom.shuffle(toSort);   Unusued because in my current implementation the array starts off already random
         quickSort(toSort, 0, toSort.length - 1);
     }
     
     public static void quickSort(Comparable[] toSort, int low, int high) {
-        if (high <= low) {  //Single item array is already sorted
-            return;
+//        if (high <= low) {  //Single item array is already sorted
+//            return;
+//        }
+        
+        //Cutoff to just Insertion Sort for smaller arrays
+        if (high<=low + 15) {
+           insertionSort(toSort, low, high);
+           return;
         }
         
         int j = quickPartition(toSort, low, high);  
@@ -153,57 +144,7 @@ public class Sorts {
         quickSort(toSort, j+1, high);  //Sorts to the right od partition
     }
     
-    /*Places the partition item in it's proper place.  Iterates through each element from both ends and
-    swaps any elements on the right side that are < array[low] with any elements on the left side that are >
-    array[low]. Returns the index, j, of the item that is now in it's proper place*/
-    private static int quickPartition(Comparable[] toSort, int low, int high) {
-        int i = low;
-        int j = high+1;
-        Comparable v = toSort[low];
-        
-        while(true) {
-            while(less(toSort[++i],v)) {  //Scan left side until you find an item that's greater then v
-                if(i==high) {  //Reached end of array
-                    break;
-                }
-            }
-            
-            while(less(v, toSort[--j])) { //Scan right side until you find an item that's greater then v
-                if(j==low) {
-                    break;
-                }
-            }
-            if(i>=j) {  //If the right side and left side poointers cross, entire array has been searched
-                break;
-            }
-            swap(toSort, i, j);  //Swaps the two out of place elements
-        }
-        
-        swap(toSort, low, j);  //Puts partition item into proper place
-        return j;  //Returns position of now correct item
-    }
-    
-    
-    /*3-Way QuickSort.  Improvement upon quickSort, increases performance in the presence of a large
-    number of duplicate keys.    */
-    public static void quickSort3(Comparable[] toSort)  {
-        //StdRandom.shuffle(toSort);   Unusued because in my current implementation the array starts off already random
-        quickSort3(toSort, 0, toSort.length - 1);
-    }
-    
-    public static void quickSort3(Comparable[] toSort, int low, int high) {
-        if (high <= low) {  //Single item array is already sorted
-            return;
-        }
-        
-        int j = quickPartition(toSort, low, high);  
-        quickSort(toSort, low, j-1);  //Sorts to the left of partition
-        quickSort(toSort, j+1, high);  //Sorts to the right od partition
-    }
-    
-    /*Places the partition item in it's proper place.  Iterates through each element from both ends and
-    swaps any elements on the right side that are < array[low] with any elements on the left side that are >
-    array[low]. Returns the index, j, of the item that is now in it's proper place*/
+    /*Places the partition item in it's proper place.  Iterates through each element from both ends and swaps any elements on the right side that are < array[low] with any elements on the left side that are > array[low]. Returns the index, j, of the item that is now in it's proper place*/
     private static int quickPartition(Comparable[] toSort, int low, int high) {
         int i = low;
         int j = high+1;
@@ -270,7 +211,8 @@ public class Sorts {
     public static void main(String[] args) {
 //      int[] masterArray = StdIn.readAllInts();  //Reading in a premade file of ints
 //      int length = Integer.parseInt(args[0]);  //Passing in the length of the random array to be created
-        
+//      int range = length;
+
         StdOut.println("Length of array to be generated");
         int length = StdIn.readInt();
         
@@ -282,45 +224,53 @@ public class Sorts {
         for (int i = 0; i < length; i++) {
             masterArray[i] = StdRandom.uniform(range);
         }
-
-//        StdOut.println("Master Array");        
-//        for(int i=0; i < length; i++) {
-//           StdOut.print(masterArray[i] + " ");
-//        }
-//        StdOut.println();
-//        StdOut.println();
-
         
+        StdOut.println();
+        StdOut.println();
+
+        //Will display the array if it's reasonably short
+        if(length <= 20) {
+            StdOut.println("Master Array");        
+            for(int i=0; i < length; i++) {
+               StdOut.print(masterArray[i] + " ");
+            }
+            StdOut.println();
+            StdOut.println();
+        }
+
+        //Selection Sort
+        StdOut.println("Selection Sort"); 
+                
         Integer[] selectionArray = new Integer[length];  
         arrayCopy(masterArray, selectionArray);
         Stopwatch t1 = new Stopwatch();
 
-        //selectionSort(selectionArray);
+        selectionSort(selectionArray);
 
-        StdOut.println("Selection Sort"); 
-//        for(int i=0; i < length; i++) {
-//           StdOut.print(selectionArray[i] + " ");
-//        }
+
         if (isSorted(selectionArray)){
-            StdOut.println("Running time: " + t1.elapsedTime());
+            StdOut.println("Successful, running time: " + t1.elapsedTime());
         }
         StdOut.println();
         
+        
+        //Insertion Sort
+        StdOut.println("Insertion Sort"); 
+              
         Integer[] insertionArray = new Integer[length];  
         arrayCopy(masterArray, insertionArray);
         Stopwatch t2 = new Stopwatch();
 
-        //insertionSort(insertionArray, 0, length-1);
+        insertionSort(insertionArray, 0, length-1);
 
-        StdOut.println("Insertion Sort"); 
-//        for(int i=0; i < length; i++) {
-//            StdOut.print(insertionArray[i] + " ");
-//        }
         if (isSorted(insertionArray)){
-            StdOut.println("Running time: " + t2.elapsedTime());
+            StdOut.println("Successful, running time: " + t2.elapsedTime());
         }
         StdOut.println();
         
+        
+        //Shell Sort
+        StdOut.println("Shell Sort"); 
         
         Integer[] shellArray = new Integer[length];  
         arrayCopy(masterArray, shellArray);
@@ -328,50 +278,41 @@ public class Sorts {
 
         shellSort(shellArray);
 
-        StdOut.println("Shell Sort"); 
-//        for(int i=0; i < length; i++) {
-//           StdOut.print(shellArray[i] + " ");
-//        }
         if (isSorted(shellArray)){
-            StdOut.println("Running time: " + t3.elapsedTime());
+            StdOut.println("Successful, running time: " + t3.elapsedTime());
         }
         StdOut.println();
         
 
+        //Merge Sort
+        StdOut.println("Merge Sort"); 
+        
         Integer[] mergeArray = new Integer[length];  
         arrayCopy(masterArray, mergeArray);
         Stopwatch t4 = new Stopwatch();
 
         mergeSort(mergeArray);
 
-        StdOut.println("Merge Sort"); 
-//        for(int i=0; i < length; i++) {
-//           StdOut.print(mergeArray[i] + " ");
-//        }
         if (isSorted(mergeArray)){
-            StdOut.println("Running time: " + t4.elapsedTime());
+            StdOut.println("Successful, running time: " + t4.elapsedTime());
         }
         StdOut.println();
         
-
+        //Quick Sort
+        StdOut.println("Quick Sort"); 
+                
         Integer[] quickArray = new Integer[length];  
         arrayCopy(masterArray, quickArray);
         Stopwatch t5 = new Stopwatch();
 
         quickSort(quickArray);
 
-        StdOut.println("Quick Sort"); 
-//        for(int i=0; i < length; i++) {
-//           StdOut.print(quickArray[i] + " ");
-//        }
         if (isSorted(quickArray)){
-            StdOut.println("Running time: " + t5.elapsedTime());
+            StdOut.println("Successful, running time: " + t5.elapsedTime());
         }
         StdOut.println();
     }
     
-    
-    //Simple function to duplicate an array
     public static void arrayCopy(int[] a, Integer[] b) {
         for(int i = 0; i < a.length; i++) {
            b[i] = a[i];
