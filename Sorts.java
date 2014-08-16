@@ -7,7 +7,6 @@ import java.util.Arrays;
 
 public class Sorts {
 
-    
     /********************
     Sorting Algorithms
     ********************/
@@ -15,8 +14,7 @@ public class Sorts {
     /*Selection Sort
     
     Sorts a passed array of any Comparable object by ascending order.Uses the Selection Sort method. For each iteration i we place the ith smallest item in array[i]*/
-    public static void selectionSort(Comparable[] toSort) {
-        
+    public static void selectionSort(Comparable[] toSort) {        
         int N = toSort.length;
         int min; //Index of the minimal element during each run
         
@@ -30,18 +28,19 @@ public class Sorts {
             swap(toSort, i, min);
         } 
     }
+
     
     /*Insertion Sort
     
     Sorts a passed array of any Comparable object by ascending order. Uses the Insertion Sort method.  For each iterarion, i, swap array[i] with entries array[<i] that are larger.*/
-    public static void insertionSort(Comparable[] toSort, int start, int end) {
-     
+    public static void insertionSort(Comparable[] toSort, int start, int end) {     
         for (int i=start; i <= end; i++) {
             for(int j = i; j > start && less(toSort[j], toSort[j-1]); j--) {
                 swap(toSort, j, j-1);
             }
         } 
     }
+
     
     /*Shell Sort
     
@@ -75,8 +74,7 @@ public class Sorts {
         mergeSort(toSort, tempArray, 0, toSort.length-1);
     }
     
-    public static void mergeSort(Comparable[] toSort, Comparable[] tempArray, int low, int high) {  //Recursively splits the array in half and then merges in proper order
-        
+    public static void mergeSort(Comparable[] toSort, Comparable[] tempArray, int low, int high) {  //Recursively splits the array in half and then merges in proper order        
          //Cutoff to just Insertion Sort for smaller arrays
         if (high<=low + 15) {
            insertionSort(toSort, low, high);
@@ -128,11 +126,7 @@ public class Sorts {
         quickSort(toSort, 0, toSort.length - 1);
     }
     
-    public static void quickSort(Comparable[] toSort, int low, int high) {
-//        if (high <= low) {  //Single item array is already sorted
-//            return;
-//        }
-        
+    public static void quickSort(Comparable[] toSort, int low, int high) {       
         //Cutoff to just Insertion Sort for smaller arrays
         if (high<=low + 15) {
            insertionSort(toSort, low, high);
@@ -238,6 +232,7 @@ public class Sorts {
             StdOut.println();
         }
 
+        
         //Selection Sort
         StdOut.println("Selection Sort"); 
                 
@@ -246,7 +241,6 @@ public class Sorts {
         Stopwatch t1 = new Stopwatch();
 
         selectionSort(selectionArray);
-
 
         if (isSorted(selectionArray)){
             StdOut.println("Successful, running time: " + t1.elapsedTime());
@@ -297,6 +291,7 @@ public class Sorts {
             StdOut.println("Successful, running time: " + t4.elapsedTime());
         }
         StdOut.println();
+
         
         //Quick Sort
         StdOut.println("Quick Sort"); 
