@@ -167,6 +167,41 @@ public class Sorts {
     }
 
     
+    /*Heap Sort
+    
+    Sorts passed array of any Comparable object by ascending order. Uses the Heap Sort method.  Starts by building a heap out of the array. It then takes each item from the top of the heap (the max item), places it on the end of the unsorted subarray, and re-heapifys the unsorted sub array.  Repeats until entire array is sorted. */
+    public static void heapSort(Comparable[] toSort) {
+        int N = toSort.length-1;
+        //Heap construction
+        for (int k = N/2; k >=1; k--) {
+            sink(toSort, k, N); //Build the heap
+        }
+        
+        //Sortdown
+        while(N >=1) {
+            swap(toSort, 1, N--);  //Put the current top of the heap to the end of the array
+            sink(toSort, 1, N);  //Re-heapify the remaining array
+        }
+    }
+    
+    private static void sink(Comparable[] toSort, int k, int end) {
+        while(2*k <= end) {
+            int j = 2*k;
+//            StdOut.println(j);
+//            StdOut.println(toSort.length);
+
+            if (j < end && less(toSort[j], toSort[j+1])) {
+                j++;
+            }
+            
+            if(!less(toSort[k],toSort[j])) {
+                break;
+            }
+            swap(toSort, k, j);
+            k=j;
+        }
+    }
+    
     /********************
     Helper methods
     ********************/
@@ -237,7 +272,7 @@ public class Sorts {
         StdOut.println("Selection Sort"); 
                 
         Integer[] selectionArray = new Integer[length];  
-        arrayCopy(masterArray, selectionArray);
+        arrayCopy(masterArray, selectionArray, false);
         Stopwatch t1 = new Stopwatch();
 
         selectionSort(selectionArray);
@@ -252,7 +287,7 @@ public class Sorts {
         StdOut.println("Insertion Sort"); 
               
         Integer[] insertionArray = new Integer[length];  
-        arrayCopy(masterArray, insertionArray);
+        arrayCopy(masterArray, insertionArray, false);
         Stopwatch t2 = new Stopwatch();
 
         insertionSort(insertionArray, 0, length-1);
@@ -267,7 +302,7 @@ public class Sorts {
         StdOut.println("Shell Sort"); 
         
         Integer[] shellArray = new Integer[length];  
-        arrayCopy(masterArray, shellArray);
+        arrayCopy(masterArray, shellArray, false);
         Stopwatch t3 = new Stopwatch();
 
         shellSort(shellArray);
@@ -282,7 +317,7 @@ public class Sorts {
         StdOut.println("Merge Sort"); 
         
         Integer[] mergeArray = new Integer[length];  
-        arrayCopy(masterArray, mergeArray);
+        arrayCopy(masterArray, mergeArray, false);
         Stopwatch t4 = new Stopwatch();
 
         mergeSort(mergeArray);
@@ -297,7 +332,7 @@ public class Sorts {
         StdOut.println("Quick Sort"); 
                 
         Integer[] quickArray = new Integer[length];  
-        arrayCopy(masterArray, quickArray);
+        arrayCopy(masterArray, quickArray, false);
         Stopwatch t5 = new Stopwatch();
 
         quickSort(quickArray);
@@ -306,11 +341,32 @@ public class Sorts {
             StdOut.println("Successful, running time: " + t5.elapsedTime());
         }
         StdOut.println();
+        
+        
+        //Heap Sort
+        StdOut.println("Heap Sort"); 
+                
+        Integer[] binHeap = new Integer[length+1];  
+        arrayCopy(masterArray, binHeap, true);
+        Stopwatch t6 = new Stopwatch();
+
+        heapSort(binHeap);
+
+        if (isSorted(binHeap,1, length)){
+            StdOut.println("Successful, running time: " + t6.elapsedTime());
+        }
+        StdOut.println();
     }
     
-    public static void arrayCopy(int[] a, Integer[] b) {
-        for(int i = 0; i < a.length; i++) {
-           b[i] = a[i];
+    public static void arrayCopy(int[] a, Integer[] b, boolean binHeap) {
+        if(!binHeap) {
+            for(int i = 0; i < a.length; i++) {
+                b[i] = a[i];
+            }
+        } else {
+            for(int i = 0; i < a.length; i++) {
+                b[i+1] = a[i];
+            }
         }
     }
 }
