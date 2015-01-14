@@ -1,6 +1,6 @@
 /*
   Sandbox for the various search algorithms from Section 2 of
-  <a href="http://algs4.cs.princeton.edu/home/">Algorithms, 4th Edition - Robert Sedgewick | Kevine Wayne</a>
+  Algorithms, 4th Edition
  */
 
 import java.util.Arrays;
@@ -13,8 +13,11 @@ public class Sorts {
     
     /*Selection Sort
     
-    Sorts a passed array of any Comparable object by ascending order.Uses the Selection Sort method. For each iteration i we place the ith smallest item in array[i]*/
+    Sorts a passed array of any Comparable object by ascending order.
+    Uses the Selection Sort method. 
+    For each iteration i we place the ith smallest item in array[i]*/
     public static void selectionSort(Comparable[] toSort) {        
+        
         int N = toSort.length;
         int min; //Index of the minimal element during each run
         
@@ -27,25 +30,34 @@ public class Sorts {
             }
             swap(toSort, i, min);
         } 
-    }
+    } //End selectionSort
 
     
     /*Insertion Sort
     
-    Sorts a passed array of any Comparable object by ascending order. Uses the Insertion Sort method.  For each iterarion, i, swap array[i] with entries array[<i] that are larger.*/
+    Sorts a passed array of any Comparable object by ascending order. 
+    Uses the Insertion Sort method.  
+    For each iterarion, i, swap array[i] with entries array[<i] that are larger.*/
     public static void insertionSort(Comparable[] toSort, int start, int end) {     
+        
         for (int i=start; i <= end; i++) {
             for(int j = i; j > start && less(toSort[j], toSort[j-1]); j--) {
                 swap(toSort, j, j-1);
             }
         } 
-    }
+    } //End insertionSort
 
     
     /*Shell Sort
     
-    Sorts a passed array of any Comparable object by ascending order. Uses the Shell Sort method, which is essentially a modified Insertion Short. Rather then decrementing by 1, we decrement by decreasing values of h, breaking the array into smaller and smaller already sorted sub-arrays. Increased performance on larger arrays, especially when there are very small values at the end of the array*/
+    Sorts a passed array of any Comparable object by ascending order. 
+    Uses the Shell Sort method, which is essentially a modified Insertion Short. 
+    Rather then decrementing by 1, we decrement by decreasing values of h, 
+    breaking the array into smaller and smaller already sorted sub-arrays. 
+    Increased performance on larger arrays, 
+    especially when there are very small values at the end of the array*/
     public static void shellSort(Comparable[] toSort) {
+        
         int N = toSort.length;
         int h = 1;
         
@@ -59,76 +71,100 @@ public class Sorts {
                     swap(toSort, j, j-h);
                 }
             }
-        h = h/3;  //Shrinks to the next h-array size
+        h = h/3;  //Shrinks to the next h-size array
         } 
-    }
+    } //End toSort
     
     
-    /*Merge Sort
+    /*Improved Merge Sort
     
-    Sorts a passed array of any Comparable object by ascending order.  Uses the Merge Sort method.  Recursively breaks the array into 1/2 sized sub arrays, then merges them in sorted order as the stack unwinds.
+    Sorts a passed array of any Comparable object by ascending order.  
+    Uses the Merge Sort method.  
+    Recursively breaks the array into 1/2 sized sub arrays, 
+    then merges them in sorted order as the stack unwinds.
     
     Uses Insertion sort when it gets to a certain threshold for small arrays*/ 
     public static void mergeSort(Comparable[] toSort) {
+        
+        //Array to use as temp storage during merge phases
         Comparable[] tempArray = new Comparable[toSort.length];  
         mergeSort(toSort, tempArray, 0, toSort.length-1);
-    }
+    } //End mergeSort
     
-    public static void mergeSort(Comparable[] toSort, Comparable[] tempArray, int low, int high) {  //Recursively splits the array in half and then merges in proper order        
-         //Cutoff to just Insertion Sort for smaller arrays
-        if (high<=low + 15) {
+    //Recursively splits the array in half and then merges in proper order 
+    public static void mergeSort(Comparable[] toSort, Comparable[] tempArray, 
+            int low, int high) {      
+        
+        //Cutoff to just Insertion Sort for smaller arrays
+        if (high<=low + 7) {
            insertionSort(toSort, low, high);
            return;
         }
         
         int mid = low + (high - low)/2;  //Create the mid point
         
-        mergeSort(toSort, tempArray, low, mid);  //Sort left half
-        mergeSort(toSort, tempArray, mid+1, high); //Sort right half
+        mergeSort(toSort, tempArray, low, mid);  //Divide left half
+        mergeSort(toSort, tempArray, mid+1, high); //Divide right half
         
-        if(greater(toSort[mid],toSort[mid+1])) {  //Skips the merge if everything in the left is smaller then everything in the right
-              mergeArrays(toSort, tempArray, low, mid, high);  //Merge results
-        }
-       
-    }
+        //Skip merge if everything in the left is smaller 
+        //than everything in the right
+        if(greater(toSort[mid],toSort[mid+1])) {  
+              mergeArrays(toSort, tempArray, low, mid, high);
+        }   
+    } //End mergeSort
     
     //Merges two sorted sub arrays into one larger sorted array
-    public static void mergeArrays(Comparable[] toSort, Comparable[] tempArray, int low, int mid, int high){
+    public static void mergeArrays(Comparable[] toSort, Comparable[] tempArray, 
+            int low, int mid, int high){
         int i = low;
         int j = mid+1;
         
-        for (int k = low; k <= high; k++) {  //Copy values into temporary array
+        //Copy values into temporary array
+        for (int k = low; k <= high; k++) {  
             tempArray[k] = toSort[k];
         }
         
-        for (int k = low; k <= high; k++) {  //Copy values back in sorted order
-            if (i > mid) {  //No more left items
+        //Copy values back in sorted order
+        for (int k = low; k <= high; k++) {  
+            //No more left items, fill in rest from right
+            if (i > mid) {  
                 toSort[k] = tempArray[j++];
             } 
-            else if (j > high) { //No more right items
+            //No more right items, fill in rest from left
+            else if (j > high) { 
                 toSort[k] = tempArray[i++];
             }
-            else if (less(tempArray[j], tempArray[i])) {  //If the item on the right is smaller
+            //If the item on the right is smaller
+            else if (less(tempArray[j], tempArray[i])) {  
                 toSort[k] = tempArray[j++];
             }
-            else {  //If the item on the left is smaller
+            //If the item on the left is smaller
+            else {  
                 toSort[k] = tempArray[i++];
             }
-        }
-    }
+        } //End for loop
+    } //end mergeArrays
     
     
-    /*Quick Sort
+    /*Improved Quick Sort
     
-    Sorts passed array of any Comparable object by ascending order. Uses the Quick Sort method. Recursively places an element in index array[v], known as the partition into it's proper place so that every element array[<v] is < array[v] and every element array[>v] is > array[v]*/
+    Sorts passed array of any Comparable object by ascending order. 
+    Uses the Quick Sort method. Recursively places an element in index array[v], 
+    known as the partition, into it's proper place so that every element 
+    array[<v] is < array[v] and every element array[>v] is > array[v]
+    
+    Uses Insertion Sort on small sub arrays*/
     public static void quickSort(Comparable[] toSort)  {
-        //StdRandom.shuffle(toSort);   Unusued because in my current implementation the array starts off already random
+        //Unusued because in current implementation the array is already random
+        //Normally necessary to preserve speed
+        //StdRandom.shuffle(toSort);   
         quickSort(toSort, 0, toSort.length - 1);
-    }
+    } //End quickSort
     
-    public static void quickSort(Comparable[] toSort, int low, int high) {       
+    public static void quickSort(Comparable[] toSort, int low, int high) {  
+        
         //Cutoff to just Insertion Sort for smaller arrays
-        if (high<=low + 15) {
+        if (high <= low + 7) {
            insertionSort(toSort, low, high);
            return;
         }
@@ -136,30 +172,38 @@ public class Sorts {
         int j = quickPartition(toSort, low, high);  
         quickSort(toSort, low, j-1);  //Sorts to the left of partition
         quickSort(toSort, j+1, high);  //Sorts to the right od partition
-    }
+    } 
     
-    /*Places the partition item in it's proper place.  Iterates through each element from both ends and swaps any elements on the right side that are < array[low] with any elements on the left side that are > array[low]. Returns the index, j, of the item that is now in it's proper place*/
+    /*Places the partition item in it's proper place.  
+    Iterates through each element from both ends and swaps any elements on the 
+    right side that are < array[low] with any elements on the left side that 
+    are > array[low]. Returns the index, j, of the item that is now in it's 
+    proper place*/
     private static int quickPartition(Comparable[] toSort, int low, int high) {
         int i = low;
         int j = high+1;
         Comparable v = toSort[low];
         
-        while(true) {
-            while(less(toSort[++i],v)) {  //Scan left side until you find an item that's greater then v
-                if(i==high) {  //Reached end of array
+        while (true) {
+            //Scan left side until you find an item that's greater then v
+            while (less(toSort[++i],v)) {  
+                if(i == high) {  //Reached end of array
                     break;
                 }
             }
             
-            while(less(v, toSort[--j])) { //Scan right side until you find an item that's greater then v
-                if(j==low) {
+            //Scan right side until you find an item that's greater then v
+            while (less(v, toSort[--j])) { 
+                if (j == low) {
                     break;
                 }
             }
-            if(i>=j) {  //If the right side and left side poointers cross, entire array has been searched
+            //If the right side and left side pointers cross
+            if (i>=j) {  
                 break;
             }
-            swap(toSort, i, j);  //Swaps the two out of place elements
+            //Swaps the two out of place elements
+            swap(toSort, i, j);  
         }
         
         swap(toSort, low, j);  //Puts partition item into proper place
@@ -238,15 +282,18 @@ public class Sorts {
    
 
     public static void main(String[] args) {
-//      int[] masterArray = StdIn.readAllInts();  //Reading in a premade file of ints
-//      int length = Integer.parseInt(args[0]);  //Passing in the length of the random array to be created
-//      int range = length;
+        //For reading in a premade file of ints
+        //int[] masterArray = StdIn.readAllInts();
+        
+        //For passing in the length of the random array to be created
+        //int length = Integer.parseInt(args[0]);  
+        //int range = length;
 
         StdOut.println("Length of array to be generated");
         int length = StdIn.readInt();
         
         
-        StdOut.println("Range random values");
+        StdOut.println("Range of random values (0 to: ");
         int range =  StdIn.readInt();
         
         int[] masterArray =  new int[length];
