@@ -210,7 +210,41 @@ public class Sorts {
         return j;  //Returns position of now correct item
     }
 
-    
+    /*3-Way Quick Sort
+
+    Variotion of Quick Sort that uses two pointers and groups all equal keys together.
+    Improves performance with lots of duplicate keys. */
+    public static void quick3way (Comparable[] toSort) {
+        threeSort(toSort, 0, toSort.length - 1);
+        assert isSorted(toSort);
+    }
+
+    private static void threeSort(Comparable[] toSort, int lo, int hi) {
+        if (hi <= lo) {
+            return;
+        }
+        int lt = lo;
+        int gt = hi;
+        Comparable v = toSort[lo];
+        int i = lo;
+
+        while (i <= gt) {
+            int cmp = toSort[i].compareTo(v);
+            if (cmp < 0) {
+                swap(toSort, lt++, i++);
+            } else if (cmp > 0) {
+                swap(toSort, i, gt--);
+            }
+            else {
+                i++;
+            }
+        }
+
+        threeSort(toSort, lo, lt - 1);
+        threeSort(toSort, gt + 1, hi);
+        assert isSorted(toSort, lo, hi);
+    } //End threeSort
+
     /*Heap Sort
     
     Sorts passed array of any Comparable object by ascending order. Uses the Heap Sort method.  Starts by building a heap out of the array. It then takes each item from the top of the heap (the max item), places it on the end of the unsorted subarray, and re-heapifys the unsorted sub array.  Repeats until entire array is sorted. */
@@ -388,6 +422,20 @@ public class Sorts {
             StdOut.println("Successful, running time: " + t5.elapsedTime());
         }
         StdOut.println();
+
+        //3-Way Quick Sort
+        StdOut.println("3-Way Quick Sort");
+
+        Integer[] threeArray = new Integer[length];
+        arrayCopy(masterArray, threeArray, false);
+        Stopwatch t6 = new Stopwatch();
+
+        quick3way(threeArray);
+
+        if (isSorted(threeArray)){
+            StdOut.println("Successful, running time: " + t6.elapsedTime());
+        }
+        StdOut.println();
         
         
         //Heap Sort
@@ -395,12 +443,12 @@ public class Sorts {
                 
         Integer[] binHeap = new Integer[length+1];  
         arrayCopy(masterArray, binHeap, true);
-        Stopwatch t6 = new Stopwatch();
+        Stopwatch t7 = new Stopwatch();
 
         heapSort(binHeap);
 
         if (isSorted(binHeap,1, length)){
-            StdOut.println("Successful, running time: " + t6.elapsedTime());
+            StdOut.println("Successful, running time: " + t7.elapsedTime());
         }
         StdOut.println();
     }
