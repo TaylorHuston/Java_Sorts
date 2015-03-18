@@ -9,105 +9,11 @@ public class Sorts {
     static Helpers sortHelper = new Helpers();
     static BasicSorts basicSort = new BasicSorts();
     static MergeSort mergeSort = new MergeSort();
+    static QuickSort quickSort = new QuickSort();
+    static QuickThreeSort quick3 = new QuickThreeSort();
     
-    /*Improved Quick Sort
-    
-    Sorts passed array of any Comparable object by ascending order. 
-    Uses the Quick Sort method. Recursively places an element in index array[v], 
-    known as the partition, into it's proper place so that every element 
-    array[<v] is < array[v] and every element array[>v] is > array[v]
-    
-    Uses Insertion Sort on small sub arrays*/
-    public static void quickSort(Comparable[] toSort)  {
-        //Unusued because in current implementation the array is already random
-        //Normally necessary to preserve speed
-        //StdRandom.shuffle(toSort);   
-        quickSort(toSort, 0, toSort.length - 1);
-    } //End quickSort
-    
-    public static void quickSort(Comparable[] toSort, int low, int high) {  
-        
-        //Cutoff to just Insertion Sort for smaller arrays
-        if (high <= low + 7) {
-            basicSort.insertionSort(toSort, low, high);
-           return;
-        }
-        
-        int j = quickPartition(toSort, low, high);  
-        quickSort(toSort, low, j-1);  //Sorts to the left of partition
-        quickSort(toSort, j+1, high);  //Sorts to the right od partition
-    } 
-    
-    /*Places the partition item in it's proper place.  
-    Iterates through each element from both ends and swaps any elements on the 
-    right side that are < array[low] with any elements on the left side that 
-    are > array[low]. Returns the index, j, of the item that is now in it's 
-    proper place*/
-    private static int quickPartition(Comparable[] toSort, int low, int high) {
-        int i = low;
-        int j = high+1;
-        Comparable v = toSort[low];
-        
-        while (true) {
-            //Scan left side until you find an item that's greater then v
-            while (sortHelper.less(toSort[++i], v)) {
-                if(i == high) {  //Reached end of array
-                    break;
-                }
-            }
-            
-            //Scan right side until you find an item that's greater then v
-            while (sortHelper.less(v, toSort[--j])) {
-                if (j == low) {
-                    break;
-                }
-            }
-            //If the right side and left side pointers cross
-            if (i>=j) {  
-                break;
-            }
-            //Swaps the two out of place elements
-            sortHelper.swap(toSort, i, j);
-        }
 
-        sortHelper.swap(toSort, low, j);  //Puts partition item into proper place
-        return j;  //Returns position of now correct item
-    }
 
-    /*3-Way Quick Sort
-
-    Variotion of Quick Sort that uses two pointers and groups all equal keys together.
-    Improves performance with lots of duplicate keys. */
-    public static void quick3way (Comparable[] toSort) {
-        threeSort(toSort, 0, toSort.length - 1);
-        assert sortHelper.isSorted(toSort);
-    }
-
-    private static void threeSort(Comparable[] toSort, int lo, int hi) {
-        if (hi <= lo) {
-            return;
-        }
-        int lt = lo;
-        int gt = hi;
-        Comparable v = toSort[lo];
-        int i = lo;
-
-        while (i <= gt) {
-            int cmp = toSort[i].compareTo(v);
-            if (cmp < 0) {
-                sortHelper.swap(toSort, lt++, i++);
-            } else if (cmp > 0) {
-                sortHelper.swap(toSort, i, gt--);
-            }
-            else {
-                i++;
-            }
-        }
-
-        threeSort(toSort, lo, lt - 1);
-        threeSort(toSort, gt + 1, hi);
-        assert sortHelper.isSorted(toSort, lo, hi);
-    } //End threeSort
 
     /*Heap Sort
     
@@ -246,7 +152,7 @@ public class Sorts {
         arrayCopy(masterArray, quickArray, false);
         Stopwatch t5 = new Stopwatch();
 
-        quickSort(quickArray);
+        quickSort.sort(quickArray);
 
         if (sortHelper.isSorted(quickArray)){
             StdOut.println("Successful, running time: " + t5.elapsedTime());
@@ -260,7 +166,7 @@ public class Sorts {
         arrayCopy(masterArray, threeArray, false);
         Stopwatch t6 = new Stopwatch();
 
-        quick3way(threeArray);
+        quick3.sort(threeArray);
 
         if (sortHelper.isSorted(threeArray)){
             StdOut.println("Successful, running time: " + t6.elapsedTime());
