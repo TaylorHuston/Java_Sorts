@@ -1,5 +1,6 @@
-/**
- * Created by taylorhuston on 3/17/15.
+/*
+ Basic, simple sorting algorithms.
+ For reference.
  */
 public class BasicSorts {
     static Helpers sortHelper = new Helpers();

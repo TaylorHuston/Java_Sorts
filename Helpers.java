@@ -1,5 +1,6 @@
-/* Helper functions for sorting
- */
+/*
+ Helper functions for sorting
+*/
 public class Helpers {
     public static boolean less(Comparable x, Comparable y) {
         return x.compareTo(y) < 0;
