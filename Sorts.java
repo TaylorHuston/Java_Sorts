@@ -11,45 +11,7 @@ public class Sorts {
     static MergeSort mergeSort = new MergeSort();
     static QuickSort quickSort = new QuickSort();
     static QuickThreeSort quick3 = new QuickThreeSort();
-    
-
-
-
-    /*Heap Sort
-    
-    Sorts passed array of any Comparable object by ascending order. Uses the Heap Sort method.  Starts by building a heap out of the array. It then takes each item from the top of the heap (the max item), places it on the end of the unsorted subarray, and re-heapifys the unsorted sub array.  Repeats until entire array is sorted. */
-    public static void heapSort(Comparable[] toSort) {
-        int N = toSort.length-1;
-        //Heap construction
-        for (int k = N/2; k >=1; k--) {
-            sink(toSort, k, N); //Build the heap
-        }
-        
-        //Sortdown
-        while(N >=1) {
-            sortHelper.swap(toSort, 1, N--);  //Put the current top of the heap to the end of the array
-            sink(toSort, 1, N);  //Re-heapify the remaining array
-        }
-    }
-    
-    private static void sink(Comparable[] toSort, int k, int end) {
-        while(2*k <= end) {
-            int j = 2*k;
-//            StdOut.println(j);
-//            StdOut.println(toSort.length);
-
-            if (j < end && sortHelper.less(toSort[j], toSort[j + 1])) {
-                j++;
-            }
-            
-            if(!sortHelper.less(toSort[k], toSort[j])) {
-                break;
-            }
-            sortHelper.swap(toSort, k, j);
-            k=j;
-        }
-    }
-   
+    static HeapSort heapSort = new HeapSort();
 
     public static void main(String[] args) {
         //For reading in a premade file of ints
@@ -63,7 +25,7 @@ public class Sorts {
         int length = StdIn.readInt();
         
         
-        StdOut.println("Range of random values (0 to: ");
+        StdOut.println("Range of random values (0 to: X");
         int range =  StdIn.readInt();
         
         int[] masterArray =  new int[length];
@@ -86,7 +48,7 @@ public class Sorts {
 
         
         //Selection Sort
-        StdOut.println("Selection Sort"); 
+        StdOut.println("Selection Sort...");
                 
         Integer[] selectionArray = new Integer[length];  
         arrayCopy(masterArray, selectionArray, false);
@@ -116,7 +78,7 @@ public class Sorts {
         
         
         //Shell Sort
-        StdOut.println("Shell Sort"); 
+        StdOut.println("Shell Sort...");
         
         Integer[] shellArray = new Integer[length];  
         arrayCopy(masterArray, shellArray, false);
@@ -131,7 +93,7 @@ public class Sorts {
         
 
         //Merge Sort
-        StdOut.println("Merge Sort"); 
+        StdOut.println("Merge Sort...");
         
         Integer[] mergeArray = new Integer[length];  
         arrayCopy(masterArray, mergeArray, false);
@@ -146,7 +108,7 @@ public class Sorts {
 
         
         //Quick Sort
-        StdOut.println("Quick Sort"); 
+        StdOut.println("Quick Sort...");
                 
         Integer[] quickArray = new Integer[length];  
         arrayCopy(masterArray, quickArray, false);
@@ -160,7 +122,7 @@ public class Sorts {
         StdOut.println();
 
         //3-Way Quick Sort
-        StdOut.println("3-Way Quick Sort");
+        StdOut.println("3-Way Quick Sort...");
 
         Integer[] threeArray = new Integer[length];
         arrayCopy(masterArray, threeArray, false);
@@ -175,13 +137,13 @@ public class Sorts {
         
         
         //Heap Sort
-        StdOut.println("Heap Sort"); 
+        StdOut.println("Heap Sort...");
                 
         Integer[] binHeap = new Integer[length+1];  
         arrayCopy(masterArray, binHeap, true);
         Stopwatch t7 = new Stopwatch();
 
-        heapSort(binHeap);
+        heapSort.sort(binHeap);
 
         if (sortHelper.isSorted(binHeap, 1, length)){
             StdOut.println("Successful, running time: " + t7.elapsedTime());
