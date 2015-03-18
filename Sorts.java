@@ -6,6 +6,7 @@
 import java.util.Arrays;
 
 public class Sorts {
+    static Helpers sortHelper = new Helpers();
 
     /********************
     Sorting Algorithms
@@ -24,11 +25,11 @@ public class Sorts {
         for (int i=0; i < N; i++) {
             min = i;  
             for(int j = i+1; j < N; j++) {
-                if(less(toSort[j], toSort[min])) {
+                if(sortHelper.less(toSort[j], toSort[min])) {
                     min = j;
                 }
             }
-            swap(toSort, i, min);
+            sortHelper.swap(toSort, i, min);
         } 
     } //End selectionSort
 
@@ -41,8 +42,8 @@ public class Sorts {
     public static void insertionSort(Comparable[] toSort, int start, int end) {     
         
         for (int i=start; i <= end; i++) {
-            for(int j = i; j > start && less(toSort[j], toSort[j-1]); j--) {
-                swap(toSort, j, j-1);
+            for(int j = i; j > start && sortHelper.less(toSort[j], toSort[j - 1]); j--) {
+                sortHelper.swap(toSort, j, j - 1);
             }
         } 
     } //End insertionSort
@@ -67,8 +68,8 @@ public class Sorts {
         
         while (h >= 1) {
             for (int i = h; i < N; i++) {
-                for (int j = i; j >= h && less(toSort[j], toSort[j-h]); j-=h) {
-                    swap(toSort, j, j-h);
+                for (int j = i; j >= h && sortHelper.less(toSort[j], toSort[j - h]); j-=h) {
+                    sortHelper.swap(toSort, j, j - h);
                 }
             }
         h = h/3;  //Shrinks to the next h-size array
@@ -108,7 +109,7 @@ public class Sorts {
         
         //Skip merge if everything in the left is smaller 
         //than everything in the right
-        if(greater(toSort[mid],toSort[mid+1])) {  
+        if(sortHelper.greater(toSort[mid], toSort[mid + 1])) {
               mergeArrays(toSort, tempArray, low, mid, high);
         }   
     } //End mergeSort
@@ -135,7 +136,7 @@ public class Sorts {
                 toSort[k] = tempArray[i++];
             }
             //If the item on the right is smaller
-            else if (less(tempArray[j], tempArray[i])) {  
+            else if (sortHelper.less(tempArray[j], tempArray[i])) {
                 toSort[k] = tempArray[j++];
             }
             //If the item on the left is smaller
@@ -186,14 +187,14 @@ public class Sorts {
         
         while (true) {
             //Scan left side until you find an item that's greater then v
-            while (less(toSort[++i],v)) {  
+            while (sortHelper.less(toSort[++i], v)) {
                 if(i == high) {  //Reached end of array
                     break;
                 }
             }
             
             //Scan right side until you find an item that's greater then v
-            while (less(v, toSort[--j])) { 
+            while (sortHelper.less(v, toSort[--j])) {
                 if (j == low) {
                     break;
                 }
@@ -203,10 +204,10 @@ public class Sorts {
                 break;
             }
             //Swaps the two out of place elements
-            swap(toSort, i, j);  
+            sortHelper.swap(toSort, i, j);
         }
-        
-        swap(toSort, low, j);  //Puts partition item into proper place
+
+        sortHelper.swap(toSort, low, j);  //Puts partition item into proper place
         return j;  //Returns position of now correct item
     }
 
@@ -216,7 +217,7 @@ public class Sorts {
     Improves performance with lots of duplicate keys. */
     public static void quick3way (Comparable[] toSort) {
         threeSort(toSort, 0, toSort.length - 1);
-        assert isSorted(toSort);
+        assert sortHelper.isSorted(toSort);
     }
 
     private static void threeSort(Comparable[] toSort, int lo, int hi) {
@@ -231,9 +232,9 @@ public class Sorts {
         while (i <= gt) {
             int cmp = toSort[i].compareTo(v);
             if (cmp < 0) {
-                swap(toSort, lt++, i++);
+                sortHelper.swap(toSort, lt++, i++);
             } else if (cmp > 0) {
-                swap(toSort, i, gt--);
+                sortHelper.swap(toSort, i, gt--);
             }
             else {
                 i++;
@@ -242,7 +243,7 @@ public class Sorts {
 
         threeSort(toSort, lo, lt - 1);
         threeSort(toSort, gt + 1, hi);
-        assert isSorted(toSort, lo, hi);
+        assert sortHelper.isSorted(toSort, lo, hi);
     } //End threeSort
 
     /*Heap Sort
@@ -257,7 +258,7 @@ public class Sorts {
         
         //Sortdown
         while(N >=1) {
-            swap(toSort, 1, N--);  //Put the current top of the heap to the end of the array
+            sortHelper.swap(toSort, 1, N--);  //Put the current top of the heap to the end of the array
             sink(toSort, 1, N);  //Re-heapify the remaining array
         }
     }
@@ -268,50 +269,16 @@ public class Sorts {
 //            StdOut.println(j);
 //            StdOut.println(toSort.length);
 
-            if (j < end && less(toSort[j], toSort[j+1])) {
+            if (j < end && sortHelper.less(toSort[j], toSort[j + 1])) {
                 j++;
             }
             
-            if(!less(toSort[k],toSort[j])) {
+            if(!sortHelper.less(toSort[k], toSort[j])) {
                 break;
             }
-            swap(toSort, k, j);
+            sortHelper.swap(toSort, k, j);
             k=j;
         }
-    }
-    
-    /********************
-    Helper methods
-    ********************/
-    private static boolean less(Comparable x, Comparable y) {
-        return x.compareTo(y) < 0;
-    }
-    
-    private static boolean equals(Comparable x, Comparable y) {
-        return x.compareTo(y) == 0;
-    }
-    
-    private static boolean greater(Comparable x, Comparable y) {
-        return x.compareTo(y) > 0;
-    }
-
-    private static void swap(Comparable[] items, int x, int y){
-        Comparable temp = items[x];
-        items[x] = items[y];
-        items[y] = temp;
-    }
-    
-    private static boolean isSorted(Comparable[] a) {
-        return isSorted(a, 0, a.length - 1);
-    }
-
-    private static boolean isSorted(Comparable[] a, int lo, int hi) {
-        for (int i = lo + 1; i <= hi; i++) {
-            if (less(a[i], a[i-1])) {
-                return false;
-            }
-        }
-        return true;
     }
    
 
@@ -358,7 +325,7 @@ public class Sorts {
 
         selectionSort(selectionArray);
 
-        if (isSorted(selectionArray)){
+        if (sortHelper.isSorted(selectionArray)){
             StdOut.println("Successful, running time: " + t1.elapsedTime());
         }
         StdOut.println();
@@ -373,7 +340,7 @@ public class Sorts {
 
         insertionSort(insertionArray, 0, length-1);
 
-        if (isSorted(insertionArray)){
+        if (sortHelper.isSorted(insertionArray)){
             StdOut.println("Successful, running time: " + t2.elapsedTime());
         }
         StdOut.println();
@@ -388,7 +355,7 @@ public class Sorts {
 
         shellSort(shellArray);
 
-        if (isSorted(shellArray)){
+        if (sortHelper.isSorted(shellArray)){
             StdOut.println("Successful, running time: " + t3.elapsedTime());
         }
         StdOut.println();
@@ -403,7 +370,7 @@ public class Sorts {
 
         mergeSort(mergeArray);
 
-        if (isSorted(mergeArray)){
+        if (sortHelper.isSorted(mergeArray)){
             StdOut.println("Successful, running time: " + t4.elapsedTime());
         }
         StdOut.println();
@@ -418,7 +385,7 @@ public class Sorts {
 
         quickSort(quickArray);
 
-        if (isSorted(quickArray)){
+        if (sortHelper.isSorted(quickArray)){
             StdOut.println("Successful, running time: " + t5.elapsedTime());
         }
         StdOut.println();
@@ -432,7 +399,7 @@ public class Sorts {
 
         quick3way(threeArray);
 
-        if (isSorted(threeArray)){
+        if (sortHelper.isSorted(threeArray)){
             StdOut.println("Successful, running time: " + t6.elapsedTime());
         }
         StdOut.println();
@@ -447,7 +414,7 @@ public class Sorts {
 
         heapSort(binHeap);
 
-        if (isSorted(binHeap,1, length)){
+        if (sortHelper.isSorted(binHeap,1, length)){
             StdOut.println("Successful, running time: " + t7.elapsedTime());
         }
         StdOut.println();
