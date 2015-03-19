@@ -13,19 +13,20 @@ public class HeapSort {
         int N = toSort.length-1;
 
         //Heap construction
-        for (int k = N/2; k >=1; k--) {
+        for (int k = N/2; k >= 1; k--) {
             sink(toSort, k, N); //Build the heap
         }
 
+
         //Sortdown
-        while(N >=1) {
+        while (N >= 1) {
             sortHelper.swap(toSort, 1, N--);  //Put the current top of the heap to the end of the array
             sink(toSort, 1, N);  //Re-heapify the remaining array
         }
     }
 
     private static void sink(Comparable[] toSort, int k, int end) {
-        while(2*k <= end) {
+        while (2*k <= end) {
             int j = 2*k;
 
             if (j < end && sortHelper.less(toSort[j], toSort[j + 1])) {
@@ -35,6 +36,7 @@ public class HeapSort {
             if(!sortHelper.less(toSort[k], toSort[j])) {
                 break;
             }
+
             sortHelper.swap(toSort, k, j);
             k=j;
         }
